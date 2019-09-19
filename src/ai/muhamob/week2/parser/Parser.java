@@ -1,6 +1,6 @@
-package ai.muhamob.parser;
+package ai.muhamob.week2.parser;
 
-import ai.muhamob.core.*;
+import ai.muhamob.week2.core.*;
 
 import java.io.*;
 

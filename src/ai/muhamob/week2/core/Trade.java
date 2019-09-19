@@ -1,4 +1,4 @@
-package ai.muhamob.core;
+package ai.muhamob.week2.core;
 
 public class Trade {
     private double price;
