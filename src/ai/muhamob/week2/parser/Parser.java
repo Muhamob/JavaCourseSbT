@@ -17,7 +17,6 @@ public class Parser {
     }
 
     public void readInput(InputStreamReader streamReader) throws IOException {
-//        InputStreamReader inputStream = new InputStreamReader(stream);
         BufferedReader reader = new BufferedReader(streamReader);
 
         // parse one trade
