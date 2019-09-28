@@ -5,27 +5,27 @@ package ai.muhamob.week3.src;
 class Node<K, V> {
     private final K key;
     private final V value;
-    private Node next;
+    private Node<K, V> next;
 
-    Node(K key, V value, Node next) {
+    Node(K key, V value, Node<K, V> next) {
         this.key = key;
         this.value = value;
         this.next = next;
     }
 
-    void setNext(Node next) {
+    void setNext(Node<K, V> next) {
         this.next = next;
     }
 
-    Object getKey() {
+    K getKey() {
         return key;
     }
 
-    Object getValue() {
+    V getValue() {
         return value;
     }
 
-    Node getNext() {
+    Node<K, V> getNext() {
         return next;
     }
 }

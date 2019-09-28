@@ -2,6 +2,7 @@ package ai.muhamob.week3.src;
 
 import java.util.HashMap;
 
+// TODO: 1. Create tests !!!
 public class Main {
     private static HashMapArray<String, Integer> hashMapArray;
 
@@ -22,5 +23,15 @@ public class Main {
         } else {
             System.out.println("smth wrong");
         }
+
+        // check if remove works
+        // should return null
+        hashMapArray.remove(elem);
+        System.out.println(hashMapArray.get(elem));
+
+        // check if contains works
+        // should return false and true
+        System.out.println(hashMapArray.contains(elem));
+        System.out.println(hashMapArray.contains("first"));
     }
 }

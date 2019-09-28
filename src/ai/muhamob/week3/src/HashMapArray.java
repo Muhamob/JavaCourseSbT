@@ -5,9 +5,9 @@ public class HashMapArray<K, V> implements Map<K, V> {
     private int tableSize;
     private Node<K, V>[] table;
 
-    public <T> HashMapArray(int tableSize) {
+    public HashMapArray(int tableSize) {
         this.tableSize = tableSize;
-        table = (Node<K,V>[])new Node[this.tableSize];
+        table = (Node<K,V>[]) new Node[this.tableSize];
     }
 
     private int getIndex(int hash) {
@@ -18,8 +18,6 @@ public class HashMapArray<K, V> implements Map<K, V> {
     public void put(K key, V value) {
         int hash = key.hashCode();
         int index = getIndex(hash);
-        System.out.println("index " + index);
-        System.out.println("table size " + tableSize);
 
         Node<K, V> node;
         Node<K, V> newNode = new Node<>(key, value, null);
@@ -35,8 +33,8 @@ public class HashMapArray<K, V> implements Map<K, V> {
         return table[index];
     }
 
-    private Node getLastNode(Node firstNode) {
-        Node node;
+    private Node<K, V> getLastNode(Node<K, V> firstNode) {
+        Node<K, V> node;
 
         if (firstNode == null || firstNode.getNext() == null) {
             return firstNode;
@@ -51,8 +49,8 @@ public class HashMapArray<K, V> implements Map<K, V> {
     }
 
     // first node has to be not null
-    private void setAfterFirstNode(Node firstNode, Node newNode) {
-        Node node;
+    private void setAfterFirstNode(Node<K, V> firstNode, Node<K, V> newNode) {
+        Node<K, V> node;
 
         if (firstNode.getNext() == null) {
             firstNode.setNext(newNode);
@@ -86,12 +84,61 @@ public class HashMapArray<K, V> implements Map<K, V> {
 
     @Override
     public void remove(K key) {
+        int hash = key.hashCode();
+        int index = getIndex(hash);
 
+        Node<K, V> firstNode = getFirstNode(index);
+        if (firstNode != null) {
+            if (firstNode.getNext() != null) {
+                if (firstNode.getKey().equals(key)) {
+                    table[index] = firstNode.getNext();
+                } else {
+                    Node<K, V> nextNode = firstNode.getNext();
+                    Node<K, V> prevNode = firstNode;
+
+                    // iterate until next Node is null or till nextNode key and key aren't the same
+                    while (nextNode.getNext() != null && !nextNode.getKey().equals(key)) {
+                        prevNode = nextNode;
+                        nextNode = nextNode.getNext();
+                    }
+
+                    // If key is present in hash map, then delete it
+                    if (nextNode.getKey().equals(key)) {
+                        // Check if nextNode is the last Node
+                        // link prevNode and node after nextNode if it isn't
+                        // otherwise delete link from prevNode to nextNode
+                        if (nextNode.getNext() != null) {
+                            prevNode.setNext(nextNode.getNext());
+                        } else {
+                            prevNode.setNext(null);
+                        }
+                    }
+                }
+            } else {
+                if (firstNode.getKey().equals(key)) {
+                    table[index] = null;
+                }
+            }
+
+        }
     }
 
     @Override
     public boolean contains(K key) {
-        return false;
+        int hash = key.hashCode();
+        int index = getIndex(hash);
+
+        Node<K, V> firstNode = getFirstNode(index);
+        if (firstNode == null) {
+            return false;
+        } else {
+            Node<K, V> node = firstNode;
+            while (node != null && !node.getKey().equals(key)) {
+                node = node.getNext();
+            }
+
+            return node != null;
+        }
     }
 
     @Override
