@@ -52,27 +52,12 @@ public class HashMapArray<K, V> implements Map<K, V> {
         }
     }
 
-    private Node<K, V> getLastNode(Node<K, V> firstNode) {
-        Node<K, V> node;
-
-        if (firstNode == null || firstNode.getNext() == null) {
-            return firstNode;
-        }
-
-        node = firstNode;
-        do {
-            node = node.getNext();
-        } while (node.getNext() != null);
-
-        return node;
-    }
-
     @Override
-    public Object get(K key) {
+    public V get(K key) {
         int hash = key.hashCode();
         int index = getIndex(hash);
 
-        Node node = table[index];
+        Node<K, V> node = table[index];
 
         if (node == null) {
             return null;
@@ -130,20 +115,7 @@ public class HashMapArray<K, V> implements Map<K, V> {
 
     @Override
     public boolean contains(K key) {
-        int hash = key.hashCode();
-        int index = getIndex(hash);
-
-        Node<K, V> firstNode = table[index];
-        if (firstNode == null) {
-            return false;
-        } else {
-            Node<K, V> node = firstNode;
-            while (node != null && !node.getKey().equals(key)) {
-                node = node.getNext();
-            }
-
-            return node != null;
-        }
+        return get(key) != null;
     }
 
     @Override

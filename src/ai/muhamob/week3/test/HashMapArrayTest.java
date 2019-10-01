@@ -248,6 +248,17 @@ class HashMapArrayTest {
 
     @Test
     void testContains() {
-        
+        HashMapArray<String, Integer> hashMapArray = makeHashMap();
+
+        assertTrue(hashMapArray.contains("one"));
+        assertTrue(hashMapArray.contains("neo"));
+        assertTrue(hashMapArray.contains("eno"));
+
+        assertTrue(hashMapArray.contains("sec"));
+        assertTrue(hashMapArray.contains("ces"));
+
+        assertTrue(hashMapArray.contains("third"));
+
+        assertFalse(hashMapArray.contains("fives"));
     }
 }
