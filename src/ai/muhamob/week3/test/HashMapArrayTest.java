@@ -7,41 +7,186 @@ import ai.muhamob.week3.src.HashMapArray;
 
 class HashMapArrayTest {
 
-    HashMapArray testHashMap(int tableSize) {
-        HashMapArray<String, Integer> hashMapArray = new HashMapArray<>(tableSize);
+    /*
+    Constructs hash map of given structure
+    0:
+    1:
+    2: -> one, 1 -> eno, 2 -> neo, 3
+    3:
+    4:
+    5: -> sec, 2 -> ces, 5
+    6:
+    7:
+    8:
+    9: -> third, 3
+    l*/
+    HashMapArray<String, Integer> makeHashMap() {
+        HashMapArray<String, Integer> hashMapArray = new HashMapArray<>(10);
 
-        //
         hashMapArray.put("one", 1);
         hashMapArray.put("eno", 2);
         hashMapArray.put("neo", 3);
 
-        hashMapArray.put("second", 22);
+        hashMapArray.put("sec", 2);
+        hashMapArray.put("ces", 5);
+
+        hashMapArray.put("third", 3);
 
         return hashMapArray;
     }
 
     @Test
-    void testHashes() {
-        int hash1 = "one".hashCode();
-        int hash2 = "noe".hashCode();
-        int hash3 = "eon".hashCode();
+    void testPutStandart() {
+        /*
+        Constructs hash map of given structure
+        0:
+        1:
+        2: -> one, 1 -> eno, 2 -> neo, 3
+        3:
+        4:
+        5: -> sec, 2 -> ces, 5
+        6:
+        7:
+        8:
+        9: -> third, 3
 
-        System.out.println(hash1);
-        System.out.println(hash2);
-        System.out.println(hash3);
+        assert that hashMap is not null
+         */
+        HashMapArray<String, Integer> hashMapArray = new HashMapArray<>(10);
 
-        assertEquals(hash1, hash2);
-        assertEquals(hash2, hash3);
+        // one and eno and neo has same index
+        // hashes are 110182, 100582, 108952
+        hashMapArray.put("one", 1);
+        hashMapArray.put("eno", 2);
+        hashMapArray.put("neo", 3);
+
+        // sec and ces hashes are 113745 and 98385
+        hashMapArray.put("sec", 2);
+        hashMapArray.put("ces", 5);
+
+        // hash is 110331239
+        hashMapArray.put("third", 3);
+
+        assertNotNull(hashMapArray);
     }
 
+    /*
+    Constructs hashMap with given structure
+    0:
+    1:
+    2: -> one, 1 -> eno, 2 -> neo, 3
+    3:
+    4:
+    5:
+    6:
+    7:
+    8:
+    9:
+
+    and then put same key but different value to the middle of the chain
+    put("eno", 4)
+
+    assume HashMapArray.get(key) works
+
+     */
     @Test
-    void testInit() {
+    void testPutRepeatedKeysPutInMiddle() {
         HashMapArray<String, Integer> hashMapArray = new HashMapArray<>(10);
+
+        hashMapArray.put("one", 1);
+        hashMapArray.put("eno", 2);
+        hashMapArray.put("neo", 3);
+
+        assertEquals(hashMapArray.get("one"), 1);
+        assertEquals(hashMapArray.get("eno"), 2);
+        assertEquals(hashMapArray.get("neo"), 3);
+
+        // put in the middle
+        hashMapArray.put("eno", 4);
+        assertEquals(hashMapArray.get("one"), 1);
+        assertEquals(hashMapArray.get("eno"), 4);
+        assertEquals(hashMapArray.get("neo"), 3);
+    }
+
+    /*
+    Constructs hashMap with given structure
+    0:
+    1:
+    2: -> one, 1 -> eno, 2 -> neo, 3
+    3:
+    4:
+    5:
+    6:
+    7:
+    8:
+    9:
+
+    and then put same key but different value to the start of the chain
+    put("one", 4)
+
+    assume HashMapArray.get(key) works
+
+     */
+    @Test
+    void testPutRepeatedKeysPutAtTheBeggining() {
+        HashMapArray<String, Integer> hashMapArray = new HashMapArray<>(10);
+
+        hashMapArray.put("one", 1);
+        hashMapArray.put("eno", 2);
+        hashMapArray.put("neo", 3);
+
+        assertEquals(hashMapArray.get("one"), 1);
+        assertEquals(hashMapArray.get("eno"), 2);
+        assertEquals(hashMapArray.get("neo"), 3);
+
+        // put in the middle
+        hashMapArray.put("one", 4);
+        assertEquals(hashMapArray.get("one"), 4);
+        assertEquals(hashMapArray.get("eno"), 2);
+        assertEquals(hashMapArray.get("neo"), 3);
+    }
+
+    /*
+    Constructs hashMap with given structure
+    0:
+    1:
+    2: -> one, 1 -> eno, 2 -> neo, 3
+    3:
+    4:
+    5:
+    6:
+    7:
+    8:
+    9:
+
+    and then put same key but different value to the end of the chain
+    put("eno", 4)
+
+    assume HashMapArray.get(key) works
+
+     */
+    @Test
+    void testPutRepeatedKeysPutToTheEnd() {
+        HashMapArray<String, Integer> hashMapArray = new HashMapArray<>(10);
+
+        hashMapArray.put("one", 1);
+        hashMapArray.put("eno", 2);
+        hashMapArray.put("neo", 3);
+
+        assertEquals(hashMapArray.get("one"), 1);
+        assertEquals(hashMapArray.get("eno"), 2);
+        assertEquals(hashMapArray.get("neo"), 3);
+
+        // put in the middle
+        hashMapArray.put("neo", 4);
+        assertEquals(hashMapArray.get("one"), 1);
+        assertEquals(hashMapArray.get("eno"), 2);
+        assertEquals(hashMapArray.get("neo"), 4);
     }
 
     @Test
     void testPutAndGet() {
-        HashMapArray<String, Integer> hashMapArray = new HashMapArray<>(10);
+        HashMapArray<String, Integer> hashMapArray = makeHashMap();
 
         hashMapArray.put("first", 1);
         hashMapArray.put("second", 2);
@@ -59,12 +204,7 @@ class HashMapArrayTest {
 
     @Test
     void testRemove() {
-        HashMapArray<String, Integer> hashMapArray = new HashMapArray<>(10);
-        hashMapArray.put("one", 1);
-        hashMapArray.put("eno", 2);
-        hashMapArray.put("neo", 3);
-
-        hashMapArray.put("second", 22);
+        HashMapArray<String, Integer> hashMapArray = makeHashMap();
 
         hashMapArray.remove("neo");
         assertNull(hashMapArray.get("neo"));
