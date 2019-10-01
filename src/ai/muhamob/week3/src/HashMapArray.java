@@ -22,15 +22,34 @@ public class HashMapArray<K, V> implements Map<K, V> {
         Node<K, V> node;
         Node<K, V> newNode = new Node<>(key, value, null);
 
-        if ((node=getFirstNode(index)) == null) {
+        if ((node=table[index]) == null) {
             table[index] = newNode;
         } else {
-            setAfterFirstNode(node, newNode);
-        }
-    }
+            if (node.getNext() == null) {
+                if (node.getKey().equals(key)) {
+                    table[index] = newNode;
+                } else {
+                    node.setNext(newNode);
+                }
+            } else {
+                Node<K,V> prevNode = node;
+                while(node.getNext() != null && !node.getKey().equals(key)) {
+                    prevNode = node;
+                    node = node.getNext();
+                }
 
-    private Node<K, V> getFirstNode(int index) {
-        return table[index];
+                if (node.getNext() == null && !node.getKey().equals(key)) {
+                    node.setNext(newNode);
+                } else if (prevNode == node && node.getKey().equals(key)) {
+                    // situation when node is first node in chain
+                    newNode.setNext(node.getNext());
+                    table[index] = newNode;
+                } else if (node.getKey().equals(key)) {
+                    newNode.setNext(node.getNext());
+                    prevNode.setNext(newNode);
+                }
+            }
+        }
     }
 
     private Node<K, V> getLastNode(Node<K, V> firstNode) {
@@ -48,30 +67,16 @@ public class HashMapArray<K, V> implements Map<K, V> {
         return node;
     }
 
-    // first node has to be not null
-    private void setAfterFirstNode(Node<K, V> firstNode, Node<K, V> newNode) {
-        Node<K, V> node;
-
-        if (firstNode.getNext() == null) {
-            firstNode.setNext(newNode);
-        } else {
-            node = getLastNode(firstNode);
-            node.setNext(newNode);
-        }
-    }
-
     @Override
     public Object get(K key) {
         int hash = key.hashCode();
         int index = getIndex(hash);
 
-        Node firstNode = getFirstNode(index);
-        Node node;
+        Node node = table[index];
 
-        if (firstNode == null) {
+        if (node == null) {
             return null;
         } else {
-            node = firstNode;
             do {
                 if (node.getKey().equals(key)) {
                     return node.getValue();
@@ -87,7 +92,7 @@ public class HashMapArray<K, V> implements Map<K, V> {
         int hash = key.hashCode();
         int index = getIndex(hash);
 
-        Node<K, V> firstNode = getFirstNode(index);
+        Node<K, V> firstNode = table[index];
         if (firstNode != null) {
             if (firstNode.getNext() != null) {
                 if (firstNode.getKey().equals(key)) {
@@ -128,7 +133,7 @@ public class HashMapArray<K, V> implements Map<K, V> {
         int hash = key.hashCode();
         int index = getIndex(hash);
 
-        Node<K, V> firstNode = getFirstNode(index);
+        Node<K, V> firstNode = table[index];
         if (firstNode == null) {
             return false;
         } else {
