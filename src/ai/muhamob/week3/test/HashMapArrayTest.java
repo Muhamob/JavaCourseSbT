@@ -203,22 +203,51 @@ class HashMapArrayTest {
     }
 
     @Test
-    void testRemove() {
+    void testRemoveFromChainWithOneElement() {
+        HashMapArray<String, Integer> hashMapArray = makeHashMap();
+
+        hashMapArray.remove("third");
+        assertNull(hashMapArray.get("third"));
+    }
+
+    @Test
+    void testRemoveFromTheBegginingOfChain() {
+        HashMapArray<String, Integer> hashMapArray = makeHashMap();
+
+        hashMapArray.remove("one");
+        assertNull(hashMapArray.get("one"));
+
+        // assert that remainder of chain not deleted
+        assertNotNull(hashMapArray.get("eno"));
+        assertNotNull(hashMapArray.get("neo"));
+    }
+
+    @Test
+    void testRemoveFromTheMiddleOfChain() {
+        HashMapArray<String, Integer> hashMapArray = makeHashMap();
+
+        hashMapArray.remove("eno");
+        assertNull(hashMapArray.get("eno"));
+
+        // assert that remainder of chain not deleted
+        assertNotNull(hashMapArray.get("one"));
+        assertNotNull(hashMapArray.get("neo"));
+    }
+
+    @Test
+    void testRemoveFromTheEndOfChain() {
         HashMapArray<String, Integer> hashMapArray = makeHashMap();
 
         hashMapArray.remove("neo");
         assertNull(hashMapArray.get("neo"));
 
-        hashMapArray.remove("second");
-        assertNull(hashMapArray.get("second"));
-
-        hashMapArray.remove("one");
-        assertNull(hashMapArray.get("one"));
-        assertEquals(hashMapArray.get("eno"), 2);
+        // assert that remainder of chain not deleted
+        assertNotNull(hashMapArray.get("one"));
+        assertNotNull(hashMapArray.get("eno"));
     }
 
     @Test
     void testContains() {
-
+        
     }
 }
