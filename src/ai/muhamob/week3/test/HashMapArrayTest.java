@@ -186,7 +186,7 @@ class HashMapArrayTest {
 
     @Test
     void testPutAndGet() {
-        HashMapArray<String, Integer> hashMapArray = makeHashMap();
+        HashMapArray<String, Integer> hashMapArray = new HashMapArray<>(10);
 
         hashMapArray.put("first", 1);
         hashMapArray.put("second", 2);
