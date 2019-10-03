@@ -3,11 +3,11 @@ package ai.muhamob.week3.src;
 public class HashMapArray<K, V> implements Map<K, V> {
 
     private final int tableSize;
-    private Node<K, V>[] table;
+    private LinkedNode<K, V>[] table;
 
     public HashMapArray(int tableSize) {
         this.tableSize = tableSize;
-        table = (Node<K,V>[]) new Node[this.tableSize];
+        table = (LinkedNode<K,V>[]) new LinkedNode[this.tableSize];
     }
 
     private int getIndex(int hash) {
@@ -19,34 +19,34 @@ public class HashMapArray<K, V> implements Map<K, V> {
         int hash = key.hashCode();
         int index = getIndex(hash);
 
-        Node<K, V> node;
-        Node<K, V> newNode = new Node<>(key, value, null);
+        LinkedNode<K, V> linkedNode;
+        LinkedNode<K, V> newLinkedNode = new LinkedNode<>(key, value, null);
 
-        if ((node=table[index]) == null) {
-            table[index] = newNode;
+        if ((linkedNode =table[index]) == null) {
+            table[index] = newLinkedNode;
         } else {
-            if (node.getNext() == null) {
-                if (node.getKey().equals(key)) {
-                    table[index] = newNode;
+            if (linkedNode.getNext() == null) {
+                if (linkedNode.getKey().equals(key)) {
+                    table[index] = newLinkedNode;
                 } else {
-                    node.setNext(newNode);
+                    linkedNode.setNext(newLinkedNode);
                 }
             } else {
-                Node<K,V> prevNode = node;
-                while(node.getNext() != null && !node.getKey().equals(key)) {
-                    prevNode = node;
-                    node = node.getNext();
+                LinkedNode<K,V> prevLinkedNode = linkedNode;
+                while(linkedNode.getNext() != null && !linkedNode.getKey().equals(key)) {
+                    prevLinkedNode = linkedNode;
+                    linkedNode = linkedNode.getNext();
                 }
 
-                if (node.getNext() == null && !node.getKey().equals(key)) {
-                    node.setNext(newNode);
-                } else if (prevNode == node && node.getKey().equals(key)) {
+                if (linkedNode.getNext() == null && !linkedNode.getKey().equals(key)) {
+                    linkedNode.setNext(newLinkedNode);
+                } else if (prevLinkedNode == linkedNode && linkedNode.getKey().equals(key)) {
                     // situation when node is first node in chain
-                    newNode.setNext(node.getNext());
-                    table[index] = newNode;
-                } else if (node.getKey().equals(key)) {
-                    newNode.setNext(node.getNext());
-                    prevNode.setNext(newNode);
+                    newLinkedNode.setNext(linkedNode.getNext());
+                    table[index] = newLinkedNode;
+                } else if (linkedNode.getKey().equals(key)) {
+                    newLinkedNode.setNext(linkedNode.getNext());
+                    prevLinkedNode.setNext(newLinkedNode);
                 }
             }
         }
@@ -57,16 +57,16 @@ public class HashMapArray<K, V> implements Map<K, V> {
         int hash = key.hashCode();
         int index = getIndex(hash);
 
-        Node<K, V> node = table[index];
+        LinkedNode<K, V> linkedNode = table[index];
 
-        if (node == null) {
+        if (linkedNode == null) {
             return null;
         } else {
             do {
-                if (node.getKey().equals(key)) {
-                    return node.getValue();
+                if (linkedNode.getKey().equals(key)) {
+                    return linkedNode.getValue();
                 }
-            } while ((node=node.getNext()) != null);
+            } while ((linkedNode = linkedNode.getNext()) != null);
         }
 
         return null;
@@ -77,35 +77,35 @@ public class HashMapArray<K, V> implements Map<K, V> {
         int hash = key.hashCode();
         int index = getIndex(hash);
 
-        Node<K, V> firstNode = table[index];
-        if (firstNode != null) {
-            if (firstNode.getNext() != null) {
-                if (firstNode.getKey().equals(key)) {
-                    table[index] = firstNode.getNext();
+        LinkedNode<K, V> firstLinkedNode = table[index];
+        if (firstLinkedNode != null) {
+            if (firstLinkedNode.getNext() != null) {
+                if (firstLinkedNode.getKey().equals(key)) {
+                    table[index] = firstLinkedNode.getNext();
                 } else {
-                    Node<K, V> nextNode = firstNode.getNext();
-                    Node<K, V> prevNode = firstNode;
+                    LinkedNode<K, V> nextLinkedNode = firstLinkedNode.getNext();
+                    LinkedNode<K, V> prevLinkedNode = firstLinkedNode;
 
                     // iterate until next Node is null or till nextNode key and key aren't the same
-                    while (nextNode.getNext() != null && !nextNode.getKey().equals(key)) {
-                        prevNode = nextNode;
-                        nextNode = nextNode.getNext();
+                    while (nextLinkedNode.getNext() != null && !nextLinkedNode.getKey().equals(key)) {
+                        prevLinkedNode = nextLinkedNode;
+                        nextLinkedNode = nextLinkedNode.getNext();
                     }
 
                     // If key is present in hash map, then delete it
-                    if (nextNode.getKey().equals(key)) {
+                    if (nextLinkedNode.getKey().equals(key)) {
                         // Check if nextNode is the last Node
                         // link prevNode and node after nextNode if it isn't
                         // otherwise delete link from prevNode to nextNode
-                        if (nextNode.getNext() != null) {
-                            prevNode.setNext(nextNode.getNext());
+                        if (nextLinkedNode.getNext() != null) {
+                            prevLinkedNode.setNext(nextLinkedNode.getNext());
                         } else {
-                            prevNode.setNext(null);
+                            prevLinkedNode.setNext(null);
                         }
                     }
                 }
             } else {
-                if (firstNode.getKey().equals(key)) {
+                if (firstLinkedNode.getKey().equals(key)) {
                     table[index] = null;
                 }
             }
@@ -121,5 +121,35 @@ public class HashMapArray<K, V> implements Map<K, V> {
     @Override
     public int size() {
         return 0;
+    }
+}
+
+// K type stands for keys type
+// V type stands for value type
+class LinkedNode<K, V> {
+    private final K key;
+    private final V value;
+    private LinkedNode<K, V> next;
+
+    LinkedNode(K key, V value, LinkedNode<K, V> next) {
+        this.key = key;
+        this.value = value;
+        this.next = next;
+    }
+
+    void setNext(LinkedNode<K, V> next) {
+        this.next = next;
+    }
+
+    K getKey() {
+        return key;
+    }
+
+    V getValue() {
+        return value;
+    }
+
+    LinkedNode<K, V> getNext() {
+        return next;
     }
 }
