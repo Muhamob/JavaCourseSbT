@@ -9,6 +9,9 @@ public class HashMapArrayOpenAddressing<K, V> implements Map<K, V> {
     private int size = 0;
     private Node<K, V>[] table;
 
+    private final float loadFactorThreshold = 0.75f;
+    private final float increaseFactor = 1.75f;
+
     public HashMapArrayOpenAddressing(int tableSize) {
         this.tableSize = tableSize;
         table = (Node<K, V>[]) new Node[this.tableSize];
@@ -44,6 +47,8 @@ public class HashMapArrayOpenAddressing<K, V> implements Map<K, V> {
 
             // figure out what to do if all cells are filled
         }
+
+        onTableChange();
     }
 
     @Override
@@ -94,6 +99,8 @@ public class HashMapArrayOpenAddressing<K, V> implements Map<K, V> {
                 size -= 1;
             }
         }
+
+        onTableChange();
     }
 
     @Override
@@ -104,6 +111,26 @@ public class HashMapArrayOpenAddressing<K, V> implements Map<K, V> {
     @Override
     public int size() {
         return size;
+    }
+
+    private void onTableChange() {
+        float loadFactor = (float) size / tableSize;
+
+        if (loadFactor >= loadFactorThreshold) {
+            rebuildTable();
+        }
+    }
+
+    private void rebuildTable() {
+        Node<K, V>[] oldTable = table;
+        tableSize = (int) (tableSize * increaseFactor);
+        table = (Node<K, V>[]) new Node[tableSize];
+
+        for (Node<K, V> node : oldTable) {
+            if (node != null) {
+                put(node.getKey(), node.getValue());
+            }
+        }
     }
 }
 

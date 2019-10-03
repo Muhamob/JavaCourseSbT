@@ -98,6 +98,7 @@ public class HashMapArrayOpenAddressingTest {
         assertEquals(hashMapArray.get("neo"), 4);
     }
 
+    @Test
     void testManyPuts() {
         HashMapArrayOpenAddressing<String, Integer> hashMapArray = new HashMapArrayOpenAddressing<>(10);
 
@@ -106,13 +107,22 @@ public class HashMapArrayOpenAddressingTest {
         hashMapArray.put("third", 3);
         hashMapArray.put("fourth", 4);
         hashMapArray.put("fives", 5);
+        hashMapArray.put("asdas", 6);
+        hashMapArray.put("asfgrer", 7);
+        hashMapArray.put("afefafacac", 8);
+        hashMapArray.put("fourthadadaxa", 9);
+        hashMapArray.put("fivesqed23edddda", 10);
+        hashMapArray.put("fisdfsadfrst", 11);
+        hashMapArray.put("seconfavdasd", 12);
+        hashMapArray.put("thirqwq2d12d", 13);
+        hashMapArray.put("fourtcbfnftnh", 14);
+        hashMapArray.put("fives34rcdsvf", 15);
+        hashMapArray.put("firs22e2rddvst", 16);
+        hashMapArray.put("secondfbf3424", 17);
+        hashMapArray.put("thirdvd32fdfdd", 18);
+        hashMapArray.put("four24r3ffsfsth", 19);
+        hashMapArray.put("five1231dwqqwes", 20);
 
-        assertEquals(hashMapArray.get("first"), 1);
-        assertEquals(hashMapArray.get("first"), 1);
-        assertEquals(hashMapArray.get("second"), 2);
-        assertEquals(hashMapArray.get("third"), 3);
-        assertEquals(hashMapArray.get("fourth"), 4);
-        assertEquals(hashMapArray.get("fives"), 5);
     }
 
     /*
@@ -127,11 +137,6 @@ public class HashMapArrayOpenAddressingTest {
     void testPutAndGet() {
         HashMapArrayOpenAddressing<String, Integer> hashMapArray = new HashMapArrayOpenAddressing<>(10);
 
-        System.out.println("first".hashCode() % 10);
-        System.out.println("second".hashCode() % 10);
-        System.out.println("third".hashCode() % 10);
-        System.out.println("fourth".hashCode() % 10);
-        System.out.println("fives".hashCode() % 10);
         hashMapArray.put("first", 1);
         hashMapArray.put("second", 2);
         hashMapArray.put("third", 3);
