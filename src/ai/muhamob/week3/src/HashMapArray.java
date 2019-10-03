@@ -2,7 +2,7 @@ package ai.muhamob.week3.src;
 
 public class HashMapArray<K, V> implements Map<K, V> {
 
-    private int tableSize;
+    private final int tableSize;
     private Node<K, V>[] table;
 
     public HashMapArray(int tableSize) {
