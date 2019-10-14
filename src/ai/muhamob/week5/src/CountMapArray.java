@@ -36,9 +36,10 @@ public class CountMapArray<K> implements CountMap<K> {
     }
 
     @Override
-    public void addAll(CountMap<K> source) {
-        for (K key : source.toMap().keySet()) {
-            Integer sourceCount = source.getCount(key);
+    public void addAll(CountMap<? extends K> source) {
+        for (Map.Entry<? extends K, Integer> e : source.toMap().entrySet()) {
+            K key = e.getKey();
+            Integer sourceCount = e.getValue();
 
             if (this.map.containsKey(key)) {
                 this.map.put(key, getCount(key) + sourceCount);
@@ -54,7 +55,7 @@ public class CountMapArray<K> implements CountMap<K> {
     }
 
     @Override
-    public void toMap(Map<K, Integer> destination) {
+    public void toMap(Map<? super K, Integer> destination) {
         for (K key : map.keySet()) {
             destination.put(key, map.get(key));
         }
