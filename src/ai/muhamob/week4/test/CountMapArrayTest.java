@@ -1,6 +1,6 @@
-package tests;
+package ai.muhamob.week4.test;
 
-import ai.muhamob.CountMapArray;
+import ai.muhamob.week4.src.CountMapArray;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
