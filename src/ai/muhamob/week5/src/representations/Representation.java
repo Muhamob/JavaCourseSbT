@@ -9,4 +9,5 @@ public interface Representation {
     public String getCloseSymbol();
     public String getEOLSymbol();
     public String getClassRepresentation(String name, Object o, int depth) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException;
+    public String getStringForMapObj(String name, Object o, int depth) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException;
 }

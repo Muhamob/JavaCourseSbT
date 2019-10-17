@@ -5,6 +5,8 @@ import ai.muhamob.week5.src.utils.WrapperTypes;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Map;
 
 public class JSONRepresentation implements Representation {
 
@@ -30,6 +32,10 @@ public class JSONRepresentation implements Representation {
     @Override
     public String getStringForPrimitiveObj(String name, Object o, int depth) {
         String value = o.toString();
+        return "\t".repeat(depth) + "\"" + name + "\" : \"" + value + "\"";
+    }
+
+    public String getStringForPrimitiveObj(String name, String value, int depth) {
         return "\t".repeat(depth) + "\"" + name + "\" : \"" + value + "\"";
     }
 
@@ -67,5 +73,22 @@ public class JSONRepresentation implements Representation {
     public String getClassRepresentation(String name, Object o, int depth) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         return "\t".repeat(depth) + "\"" + name + "\" : " +
                 getClassRepresentation(o, depth);
+    }
+
+    @Override
+    public String getStringForMapObj(String name, Object o, int depth) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        Map map = (Map) o;
+
+        StringBuilder repr = new StringBuilder();
+        repr.append("\t".repeat(depth) + "\"" + name + "\" : ");
+
+        for (Object key : map.entrySet()) {
+            Object value = map.get(key);
+            String keyRepresentation = getClassRepresentation(key, depth);
+            String valueRepresentation = getClassRepresentation(value, depth);
+            repr.append(getStringForPrimitiveObj(keyRepresentation, valueRepresentation, depth+1));
+        }
+
+        return repr.toString();
     }
 }
