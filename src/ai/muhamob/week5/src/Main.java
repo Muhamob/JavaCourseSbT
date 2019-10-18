@@ -15,7 +15,7 @@ public class Main {
         Object o = new Node();
         Representation representation = new JSONRepresentation();
         Serializer serializer = new Serializer(representation);
-        System.out.println(serializer.serialize(o, 0));
+        System.out.println(serializer.serialize(o));
 //        Gson gson = new Gson();
 //        System.out.println(gson.toJson(o));
     }

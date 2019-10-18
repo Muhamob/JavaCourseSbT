@@ -30,63 +30,69 @@ public class JSONRepresentation implements Representation {
     }
 
     @Override
-    public String getStringForPrimitiveObj(String name, Object o, int depth) {
+    public String getStringForPrimitiveObj(String name, Object o) {
         String value = o.toString();
-        return "\t".repeat(depth) + "\"" + name + "\" : \"" + value + "\"";
+        String repr = "\"" + name + "\" : ";
+        if (o.getClass().getSuperclass() == Number.class) {
+            return repr + value;
+        }
+        return repr + "\"" + value + "\"";
     }
 
-    public String getStringForPrimitiveObj(String name, String value, int depth) {
-        return "\t".repeat(depth) + "\"" + name + "\" : \"" + value + "\"";
+    public String getStringForPrimitiveObj(String name, String value) {
+        return "\"" + name + "\" : \"" + value + "\"";
     }
 
     @Override
-    public String getStringForArrayObj(String name, Object o,int depth) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+    public String getStringForArrayObj(String name, Object o) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         StringBuilder out = new StringBuilder();
-        out.append("\t".repeat(depth)).append("\"").append(name).append("\" : [ \n");
+        out.append("\"").append(name).append("\" : [");
 
 
         for (int i=0; i<Array.getLength(o); i++) {
             Object obj = Array.get(o, i);
-            out.append("\t".repeat(depth+1));
             if (WrapperTypes.getWrapperTypes().contains(obj.getClass())) {
-                out.append("\"").append(obj.toString());
-                if (i != Array.getLength(o) - 1) {
-                    out.append("\", \n");
+
+                if (obj.getClass().getSuperclass() == Number.class) {
+                    out.append(obj.toString());
                 } else {
-                    out.append("\" \n");
+                    out.append("\"").append(obj.toString()).append("\"");
+                }
+                if (i != Array.getLength(o) - 1) {
+                    out.append(",");
                 }
             } else {
-                out.append(getClassRepresentation(obj, depth+1));
+                out.append(getClassRepresentation(obj));
             }
         }
 
-        out.append("\t".repeat(depth)).append("], \n");
+        out.append("],");
         return out.toString();
     }
 
-    private String getClassRepresentation(Object o, int depth) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+    private String getClassRepresentation(Object o) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         Serializer<JSONRepresentation> serializer = new Serializer<>(new JSONRepresentation());
-        return serializer.serialize(o, depth);
+        return serializer.serialize(o);
     }
 
     @Override
-    public String getClassRepresentation(String name, Object o, int depth) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
-        return "\t".repeat(depth) + "\"" + name + "\" : " +
-                getClassRepresentation(o, depth);
+    public String getClassRepresentation(String name, Object o) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+        return "\"" + name + "\" : " +
+                getClassRepresentation(o);
     }
 
     @Override
-    public String getStringForMapObj(String name, Object o, int depth) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    public String getStringForMapObj(String name, Object o) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         Map map = (Map) o;
 
         StringBuilder repr = new StringBuilder();
-        repr.append("\t".repeat(depth) + "\"" + name + "\" : ");
+        repr.append("\"" + name + "\" : ");
 
         for (Object key : map.entrySet()) {
             Object value = map.get(key);
-            String keyRepresentation = getClassRepresentation(key, depth);
-            String valueRepresentation = getClassRepresentation(value, depth);
-            repr.append(getStringForPrimitiveObj(keyRepresentation, valueRepresentation, depth+1));
+            String keyRepresentation = getClassRepresentation(key);
+            String valueRepresentation = getClassRepresentation(value);
+            repr.append(getStringForPrimitiveObj(keyRepresentation, valueRepresentation));
         }
 
         return repr.toString();
