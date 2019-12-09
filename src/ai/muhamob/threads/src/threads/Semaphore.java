@@ -3,20 +3,19 @@ package ai.muhamob.threads.src.threads;
 public class Semaphore {
     private final int maxThreads;
     private int currentThreads;
-    private final Object lock = new Object();
 
     public Semaphore(int maxThreads) {
         this.maxThreads = maxThreads;
     }
 
     public void lock() {
-        synchronized (lock) {
+        synchronized (this) {
             System.out.println("Try to lock by" + Thread.currentThread().getName());
 
             if (currentThreads < maxThreads) {
                 currentThreads += 1;
                 try {
-                    lock.wait();
+                    this.wait();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -25,9 +24,9 @@ public class Semaphore {
     }
 
     public void unlock() {
-        synchronized (lock) {
+        synchronized (this) {
             currentThreads -= 1;
-            lock.notify();
+            this.notify();
             System.out.println("Thread " + Thread.currentThread().getName() + " unlocked");
         }
     }
