@@ -38,7 +38,7 @@ public class CollectionUtils {
         return false;
     }
 
-    public static<T> boolean containsAll(List<? super T> c1, List<T> c2) {
+    public static<T> boolean containsAll(List<? extends T> c1, List<T> c2) {
         for (T t : c2) {
             if (!c1.contains(t)) {
                 return false;
@@ -58,7 +58,7 @@ public class CollectionUtils {
         return dest;
     }
 
-    public static<T> List<? super T> range(List<? extends T> list, T min, T max, Comparator<T> comparator) {
+    public static<T> List<? super T> range(List<? extends T> list, T min, T max, Comparator<? super T> comparator) {
         List<? super T> dest = new ArrayList<>();
         for (T t : list) {
             if (comparator.compare(t, min) > 0 && comparator.compare(t, max) < 0) {
